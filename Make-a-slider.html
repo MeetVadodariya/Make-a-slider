@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Employee Records</title>
+        <link rel="stylesheet"
+            href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    </head>
+  
+    <body>
+        <div class="container mt-5">
+            <h2 class="mb-4 fw-bold">Employee Records</h2>
+
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <label for="cityFilter fw-bold">City</label>
+                    <select id="cityFilter" class="form-control">
+                        <option value>All Cities</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label for="salaryFilter">Salary</label>
+                    <select id="salaryFilter" class="form-control">
+                        <option value>All Salaries</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label for="depFilter">Department</label>
+                    <select id="depFilter" class="form-control">
+                        <option value>All Departments</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label for="degiFilter">Designation</label>
+                    <select id="degiFilter" class="form-control">
+                        <option value>All Designations</option>
+                    </select>
+                </div>
+            </div>
+
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>City</th>
+                        <th>Salary</th>
+                        <th>Designation</th>
+                        <th>Department</th>
+                    </tr>
+                </thead>
+                <tbody id="recordTable">
+                </tbody>
+            </table>
+
+            <div class="text-right">
+                <h3>Total Salary: <span id="totalSalary"></span></h3>
+            </div>
+        </div>
+
+        <script>
+        const records = [
+            {
+                id: 1, 
+                name: "ashish",
+                email: "ashu@gmail.com", 
+                phone: "1121212", 
+                city: "surat", 
+                salary: 20000, 
+                degi: "senior", 
+                dep: "programming"
+            },
+
+            {
+                id: 2, 
+                name: "hari", 
+                email: "hari@gmail.com", 
+                phone: "5454545", city: "surat", 
+                salary: 22000, 
+                degi: "junior", 
+                dep: "ui/ux"
+            },
+
+            {
+                id: 3, 
+                name: "raj", 
+                email: "raj@gmail.com",
+                phone: "454545", 
+                city: "vadodara", 
+                salary: 25000, 
+                degi: "junior", 
+                dep: "bde"
+
+            },
+
+            {
+                id: 4, 
+                name: "deep", 
+                email: "deep@gmail.com", 
+                phone: "565656", 
+                city: "vapi", 
+                salary: 30000, 
+                degi: "tl", 
+                dep: "webdesign"
+            },
+
+            {
+                
+                id: 5, 
+                name: "jay", 
+                email: "jay@gmail.com", 
+                phone: "5565656", 
+                city: "rajkot", 
+                salary: 20000, 
+                degi: "senior", 
+                dep: "programming"
+
+            },
+
+            {
+                id: 6, 
+                name: "ajay", 
+                email: "ajay@gmail.com", 
+                phone: "5565656", 
+                city: "vapi", 
+                salary: 25000, 
+                degi: "manager", 
+                dep: "ui/ux"
+                
+            }
+        ];
+
+        function loadFilters() {
+            const cityFilter = document.getElementById('cityFilter');
+            const salaryFilter = document.getElementById('salaryFilter');
+            const depFilter = document.getElementById('depFilter');
+            const degiFilter = document.getElementById('degiFilter');
+
+            const cities = [...new Set(records.map(record => record.city))];
+            const salaries = [...new Set(records.map(record => record.salary))];
+            const departments = [...new Set(records.map(record => record.dep))];
+            const designations = [...new Set(records.map(record => record.degi))];
+
+            console.log('Cities:', cities);
+            console.log('Salaries:', salaries);
+            console.log('Departments:', departments);
+            console.log('Designations:', designations);
+
+            cities.forEach(city => cityFilter.innerHTML += `<option value="${city}">${city}</option>`);
+            salaries.forEach(salary => salaryFilter.innerHTML += `<option value="${salary}">${salary}</option>`);
+            departments.forEach(dep => depFilter.innerHTML += `<option value="${dep}">${dep}</option>`);
+            designations.forEach(degi => degiFilter.innerHTML += `<option value="${degi}">${degi}</option>`);
+        }
+
+        function loadTable(filteredRecords) {
+            const tableBody = document.getElementById('recordTable');
+            tableBody.innerHTML = ''; 
+
+            let totalSalary = 0;
+            
+            filteredRecords.forEach(record => {
+                totalSalary += record.salary;
+                tableBody.innerHTML += `
+                    <tr>
+                        <td>${record.id}</td>
+                        <td>${record.name}</td>
+                        <td>${record.email}</td>
+                        <td>${record.phone}</td>
+                        <td>${record.city}</td>
+                        <td>${record.salary}</td>
+                        <td>${record.degi}</td>
+                        <td>${record.dep}</td>
+                    </tr>
+               `;
+            });
+
+            console.log('Total Salary:', totalSalary);
+            document.getElementById('totalSalary').innerText = totalSalary;
+        }
+
+        function filterRecords() {
+            const cityFilter = document.getElementById('cityFilter').value;
+            const salaryFilter = document.getElementById('salaryFilter').value;
+            const depFilter = document.getElementById('depFilter').value;
+            const degiFilter = document.getElementById('degiFilter').value;
+
+            console.log('Current Filters:', {
+                city: cityFilter,
+                salary: salaryFilter,
+                department: depFilter,
+                designation: degiFilter
+            });
+
+            const filteredRecords = records.filter(record => {
+                return (cityFilter === '' || record.city === cityFilter) &&
+                       (salaryFilter === '' || record.salary == salaryFilter) &&
+                       (depFilter === '' || record.dep === depFilter) &&
+                       (degiFilter === '' || record.degi === degiFilter);
+            });
+
+            console.log('Filtered Records:', filteredRecords);
+
+            loadTable(filteredRecords);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadFilters();
+            loadTable(records);
+
+            document.getElementById('cityFilter').addEventListener('change', filterRecords);
+            document.getElementById('salaryFilter').addEventListener('change', filterRecords);
+            document.getElementById('depFilter').addEventListener('change', filterRecords);
+            document.getElementById('degiFilter').addEventListener('change', filterRecords);
+        });
+    </script>
+    </body>
+</html>
